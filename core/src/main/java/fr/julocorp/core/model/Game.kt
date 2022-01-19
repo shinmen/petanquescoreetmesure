@@ -67,12 +67,11 @@ class Game private constructor(val id: UUID, var teams: List<Team>) {
             }
         }
 
-    suspend fun endGame(winner: Winner, gameRepository: GameRepository): Either<GameError, Winner> =
+    suspend fun endGame(winner: Winner): Either<GameError, Winner> =
         either {
             this@Game.run {
                 checkGameNotAlreadyWon().bind()
                 checkWinnerIsPresentInTeams(winner).bind()
-                //gameRepository.endGame(this, winner).bind()
             }
 
             winner

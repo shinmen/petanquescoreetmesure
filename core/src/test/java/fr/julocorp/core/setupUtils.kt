@@ -1,7 +1,10 @@
 package fr.julocorp.core
 
 import arrow.core.Either
+import arrow.core.Nel
+import arrow.core.computations.either
 import arrow.core.flatMap
+import fr.julocorp.core.exception.GameError
 import fr.julocorp.core.model.Game
 import fr.julocorp.core.model.Team
 import fr.julocorp.core.repository.GameRepository
@@ -10,15 +13,11 @@ import org.mockito.kotlin.any
 import java.util.*
 
 
-suspend fun <T, R> setUpStartGame(
+suspend fun setUpStartGame(
     id: UUID,
     teams: List<Team>,
     repository: GameRepository,
-    test: suspend (Either<Throwable, Game>) -> Either<T, R>
-) {
-    Game.startGame(id, teams, repository).flatMap { test(it) }.mapLeft { it }
-}
-
+): Either<Nel<GameError>, Either<Throwable, Game>> = Game.startGame(id, teams, repository)
 
 suspend fun setUpGameRepository(): GameRepository {
     val gameRepository = Mockito.mock(GameRepository::class.java)
